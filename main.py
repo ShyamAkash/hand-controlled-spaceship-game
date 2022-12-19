@@ -2,7 +2,14 @@ import pygame
 import os
 import cv2
 import random
+import PySimpleGUI as pg
 from cvzone import HandTrackingModule
+
+pg.theme('SystemDefaultForReal')
+layout=[[pg.Checkbox('Show the view of the Camera', False, key='check')],
+        [pg.Button('Launch Game')]]
+
+win=pg.Window('Game Settings', layout)
 
 showcam=True
 
@@ -67,13 +74,13 @@ def main():
                 player_rect.x, player_rect.y=hands[0]["center"]
             else:
                 if keys_pressed[pygame.K_w] and player_rect.y>0:
-                    player_rect.y-=10
+                    player_rect.y-=5
                 elif keys_pressed[pygame.K_s] and player_rect.y<560:
-                    player_rect.y+=10
+                    player_rect.y+=5
                 elif keys_pressed[pygame.K_a] and player_rect.x>0:
-                    player_rect.x-=10
+                    player_rect.x-=5
                 elif keys_pressed[pygame.K_d] and player_rect.x<760:
-                    player_rect.x+=10
+                    player_rect.x+=5
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running=False
@@ -113,5 +120,13 @@ def main():
     pygame.quit()
     cap.release()
 
-if __name__=="__main__":
-    main()
+while True:
+    event, values=win.read()
+    if event==pg.WIN_CLOSED:
+        win.close()
+        break
+    if event=='Launch Game':
+        showcam=values['check']
+        win.close()
+        main()
+        break
