@@ -43,8 +43,12 @@ class Enemy:
 bg=pygame.image.load(os.path.join('assets', 'bg.jpg'))
 go=pygame.image.load(os.path.join('assets', 'go.jpg'))
 menu=pygame.image.load(os.path.join('assets', 'menu.png'))
+icon=pygame.image.load(os.path.join('assets', 'icon.png'))
+
 pygame.mixer.music.load(os.path.join('assets', 'music.mp3'))
 pygame.mixer.music.set_volume(0.2)
+
+pygame.display.set_icon(icon)
 
 def main():
     game_start=True
