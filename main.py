@@ -11,18 +11,18 @@ layout=[[pg.Checkbox('Show the view of the Camera', False, key='check')],
 
 win=pg.Window('Game Settings', layout)
 
-showcam=True
-
 HEIGHT=600
 WIDTH=800
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 SCORE_FONT=pygame.font.SysFont('Cascadia Code', 40)
 SCORE_FONT_ENDSCREEN=pygame.font.SysFont('Cooper', 160)
 
 detector=HandTrackingModule.HandDetector(maxHands=1)
 cap=cv2.VideoCapture(0)
+showcam=False
 
 screen=pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Hand Controlled Space Wars")
@@ -43,6 +43,8 @@ class Enemy:
 bg=pygame.image.load(os.path.join('assets', 'bg.jpg'))
 go=pygame.image.load(os.path.join('assets', 'go.jpg'))
 menu=pygame.image.load(os.path.join('assets', 'menu.png'))
+pygame.mixer.music.load(os.path.join('assets', 'music.mp3'))
+pygame.mixer.music.set_volume(0.2)
 
 def main():
     game_start=True
@@ -53,13 +55,15 @@ def main():
     global showcam
     enemies_list=[]
     player_rect=pygame.Rect(100, 100, 40, 40)
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play()
     while running:
         clock.tick(60)
         if game_start:
             screen.blit(menu, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    game_start=False
+                    running=False
             keys_pressed=pygame.key.get_pressed()
             if keys_pressed[pygame.K_ESCAPE]:
                 game_start=False
