@@ -7,6 +7,7 @@ from cvzone import HandTrackingModule
 
 pg.theme('SystemDefaultForReal')
 layout=[[pg.Checkbox('Show the view of the Camera', False, key='check')],
+        [pg.Text('Enter Camera ID (Default is 0): '), pg.Input(key="cam")],
         [pg.Button('Launch Game')]]
 
 win=pg.Window('Game Settings', layout)
@@ -21,7 +22,6 @@ SCORE_FONT=pygame.font.SysFont('Cascadia Code', 40)
 SCORE_FONT_ENDSCREEN=pygame.font.SysFont('Cooper', 160)
 
 detector=HandTrackingModule.HandDetector(maxHands=1)
-cap=cv2.VideoCapture(0)
 showcam=False
 
 screen=pygame.display.set_mode((WIDTH, HEIGHT))
@@ -135,6 +135,12 @@ while True:
         break
     if event=='Launch Game':
         showcam=values['check']
-        win.close()
-        main()
-        break
+        try:
+            cam=int(values['cam'])
+            cap=cv2.VideoCapture(cam)
+            win.close()
+            main()
+            break
+        except:
+            pg.popup_error("Please Enter a valid value(0, 1, 2)", title='ERROR')
+        
