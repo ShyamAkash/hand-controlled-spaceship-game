@@ -6,7 +6,8 @@ import PySimpleGUI as pg
 from cvzone import HandTrackingModule
 
 pg.theme('SystemDefaultForReal')
-layout=[[pg.Checkbox('Show the view of the Camera', False, key='check')],
+layout=[[pg.Checkbox('Use only WASD', False, key='wasd_only')],
+        [pg.Checkbox('Show the view of the Camera', False, key='check')],
         [pg.Text('Enter Camera ID (Default is 0): '), pg.Input(key="cam")],
         [pg.Button('Launch Game')]]
 
@@ -95,14 +96,14 @@ def main():
             if send_enemy:
                 enemy=Enemy()
                 enemy.rect=pygame.Rect(WIDTH, random.choice([i for i in range(600) if i%60==0]), 25, 25)
-                if score<20:
+                if score<50:
                     enemy.vel=random.choice([2, 5, 10])
                 else:
-                    enemy.vel=random.choice([10, 13, 15])
+                    enemy.vel=random.choice([5, 10, 15])
                 enemies_list.append(enemy)
-                if len(enemies_list)>=6:
+                if len(enemies_list)>=difficulty:
                     send_enemy=False
-            if showcam:
+            if showcam and not wasd:
                 cv2.imshow('img', img)
             screen.blit(bg, (0,0))
             screen.blit(player, (player_rect.x, player_rect.y))
@@ -133,14 +134,25 @@ while True:
     if event==pg.WIN_CLOSED:
         win.close()
         break
+
     if event=='Launch Game':
         showcam=values['check']
         try:
             cam=int(values['cam'])
             cap=cv2.VideoCapture(cam)
+            difficulty=10
+            wasd=False
             win.close()
             main()
             break
         except:
-            pg.popup_error("Please Enter a valid value(0, 1, 2)", title='ERROR')
+            if values['wasd_only']==True:
+                cap=cv2.VideoCapture(0)
+                difficulty=15
+                wasd=True
+                win.close()
+                main()
+                break
+            else:
+                pg.popup_error("Please Enter a valid value(0, 1, 2) or check the Only WASD option", title='ERROR')
         
