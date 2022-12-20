@@ -20,7 +20,7 @@ pygame.font.init()
 pygame.mixer.init()
 
 SCORE_FONT=pygame.font.SysFont('Cascadia Code', 40)
-SCORE_FONT_ENDSCREEN=pygame.font.SysFont('Cooper', 160)
+SCORE_FONT_ENDSCREEN=pygame.font.SysFont('Cooper', 120)
 
 detector=HandTrackingModule.HandDetector(maxHands=1)
 showcam=False
@@ -121,7 +121,7 @@ def main():
             if GAME_OVER:
                 screen.blit(go, (0, 0))
                 score_text_go=SCORE_FONT_ENDSCREEN.render(f"Score: {score}", 1, (255, 0, 0))
-                screen.blit(score_text_go, (190, 400))
+                screen.blit(score_text_go, (250, 400))
     
         pygame.display.update()
     
@@ -140,7 +140,7 @@ while True:
         try:
             cam=int(values['cam'])
             cap=cv2.VideoCapture(cam)
-            difficulty=10
+            difficulty=8
             wasd=False
             win.close()
             main()
