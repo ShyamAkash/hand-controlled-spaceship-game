@@ -1,3 +1,4 @@
+import json
 import pygame
 import os
 import cv2
@@ -21,6 +22,7 @@ pygame.mixer.init()
 
 SCORE_FONT=pygame.font.SysFont('Cascadia Code', 40)
 SCORE_FONT_ENDSCREEN=pygame.font.SysFont('Cooper', 120)
+HIGHSCORE_FONT=pygame.font.SysFont('cooper', 40)
 
 detector=HandTrackingModule.HandDetector(maxHands=1)
 showcam=False
@@ -52,6 +54,7 @@ pygame.mixer.music.set_volume(0.2)
 pygame.display.set_icon(icon)
 
 def main():
+    new_highscore=False
     game_start=True
     score=0
     GAME_OVER=False
@@ -110,6 +113,14 @@ def main():
             for e in enemies_list:
                 e.rect.x-=e.vel
                 if e.rect.colliderect(player_rect):
+                    with open('highscore', 'r') as f:
+                        highscore=f.read()
+                        if int(highscore)<score:
+                            new_highscore=True
+                    if new_highscore:
+                        highscore=score
+                        with open('highscore', 'w') as f:
+                            f.write(str(score))
                     GAME_OVER=True
                 if e.rect.x<=5 and not GAME_OVER:
                     enemies_list.remove(e)
@@ -121,7 +132,9 @@ def main():
             if GAME_OVER:
                 screen.blit(go, (0, 0))
                 score_text_go=SCORE_FONT_ENDSCREEN.render(f"Score: {score}", 1, (255, 0, 0))
+                highscore_text=HIGHSCORE_FONT.render(f"Highscore: {highscore}", 1, (255, 100, 100))
                 screen.blit(score_text_go, (250, 400))
+                screen.blit(highscore_text, (250, 500))
     
         pygame.display.update()
     
