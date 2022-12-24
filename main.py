@@ -9,7 +9,7 @@ pg.theme('SystemDefaultForReal')
 layout=[[pg.Checkbox('Use only WASD', False, key='wasd_only')],
         [pg.Checkbox('Show the view of the Camera', False, key='check')],
         [pg.Text('Enter Camera ID (Default is 0): '), pg.Input(key="cam")],
-        [pg.Button('Launch Game')]]
+        [pg.Button('Launch Game'), pg.Button('Reset Highscore')]]
 
 win=pg.Window('Game Settings', layout)
 
@@ -178,7 +178,9 @@ while True:
     if event==pg.WIN_CLOSED:
         win.close()
         break
-
+    if event=='Reset Highscore':
+        with open('highscore', 'w') as f:
+            f.write('0')
     if event=='Launch Game':
         showcam=values['check']
         try:
