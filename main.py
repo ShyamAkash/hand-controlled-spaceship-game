@@ -199,4 +199,3 @@ while True:
                 break
             else:
                 pg.popup_error("Please Enter a valid value(0, 1, 2) or check the Only WASD option", title='ERROR')
-        
